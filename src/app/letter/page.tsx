@@ -2,14 +2,23 @@
 
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LetterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const contentRef = useRef<HTMLDivElement>(null);
   const letterRef = useRef<HTMLDivElement>(null);
   const envelopeRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+
+  // 获取信件点击时的位置参数，提供默认值
+  const clickX = parseFloat(searchParams.get('clickX') || '0');
+  const clickY = parseFloat(searchParams.get('clickY') || '0');
+  
+  // 计算屏幕中心位置作为默认值和目标位置
+  const screenCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
+  const screenCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
 
   useEffect(() => {
     if (!contentRef.current || !letterRef.current || !envelopeRef.current || !paperRef.current) return;
@@ -22,10 +31,11 @@ export default function LetterPage() {
       opacity: 0
     });
 
+    // 如果有传入位置参数，从该位置开始；否则从屏幕中心开始
     gsap.set(letterRef.current, {
-      scale: 1.5,
-      x: '50vw',
-      y: '50vh',
+      scale: 1,
+      x: clickX || screenCenterX,
+      y: clickY || screenCenterY, 
       xPercent: -50,
       yPercent: -50,
     });
@@ -43,8 +53,17 @@ export default function LetterPage() {
 
     // 动画序列
     tl
-      // 1. 暂停展示信件
-      .to({}, { duration: 0.5 })
+      // 1. 从传入位置移动到屏幕中心并放大
+      .to(letterRef.current, {
+        x: screenCenterX,
+        y: screenCenterY,
+        scale: 1.5,
+        duration: 0.6,
+        ease: 'power2.out'
+      })
+      
+      // 2. 暂停展示信件
+      .to({}, { duration: 0.3 })
       
       // 2. 信纸从信封中抽出
       .to(paperRef.current, {
@@ -93,7 +112,7 @@ export default function LetterPage() {
         ease: 'power2.out'
       }, '-=0.3');
 
-  }, []);
+  }, [clickX, clickY, screenCenterX, screenCenterY]);
 
   const handleBackClick = () => {
     if (!contentRef.current) return;

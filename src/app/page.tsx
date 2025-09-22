@@ -8,11 +8,11 @@ export default function Home() {
   const router = useRouter();
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const handleLetterClick = () => {
+  const handleLetterClick = (clickX: number, clickY: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    // 直接跳转，不等待动画
-    router.push('/letter');
+    // 传递点击位置参数并跳转
+    router.push(`/letter?clickX=${clickX}&clickY=${clickY}`);
   };
 
   const handleAnimationComplete = () => {

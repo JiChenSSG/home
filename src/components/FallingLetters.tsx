@@ -5,13 +5,17 @@ import { gsap } from 'gsap';
 import Letter from './Letter';
 
 interface FallingLettersProps {
-  onLetterClick?: () => void;
+  onLetterClick?: (clickX: number, clickY: number) => void;
   onAnimationComplete?: () => void;
 }
 
 const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimationComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpening, setIsOpening] = useState(false);
+
+  // 设置信件初始位置在屏幕中央上方
+	const centerX = (window.innerWidth - 80) / 2; // 80是信件宽度
+  const finalY = window.innerHeight - 120; // 距离底部120px
 
   const handleLetterClick = () => {
     if (isOpening) return; // 防止重复点击
@@ -24,6 +28,12 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimat
     
     if (!letter) return;
 
+    // 获取信件当前位置
+    const letterElement = letter as HTMLElement;
+    const rect = letterElement.getBoundingClientRect();
+    const clickX = rect.left + rect.width / 2;
+    const clickY = rect.top + rect.height / 2;
+
     // 停止所有当前动画
     gsap.killTweensOf(letter);
 
@@ -35,8 +45,8 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimat
       yoyo: true,
       repeat: 1,
       onComplete: () => {
-        // 直接触发跳转
-        onLetterClick?.();
+        // 传递点击位置信息
+        onLetterClick?.(clickX, clickY);
         onAnimationComplete?.();
       }
     });
@@ -48,10 +58,6 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimat
     const letter = containerRef.current.querySelector('.falling-letter');
     
     if (!letter) return;
-
-    // 设置信件初始位置在屏幕中央上方
-    const centerX = (window.innerWidth - 80) / 2; // 80是信件宽度
-    const finalY = window.innerHeight - 120; // 距离底部120px
 
     gsap.set(letter, {
       x: centerX,
