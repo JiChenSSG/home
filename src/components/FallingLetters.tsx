@@ -1,15 +1,46 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import Letter from './Letter';
 
 interface FallingLettersProps {
   onLetterClick?: () => void;
+  onAnimationComplete?: () => void;
 }
 
-const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick }) => {
+const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimationComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpening, setIsOpening] = useState(false);
+
+  const handleLetterClick = () => {
+    if (isOpening) return; // 防止重复点击
+    
+    setIsOpening(true);
+    
+    // 简单的点击反馈
+    if (!containerRef.current) return;
+    const letter = containerRef.current.querySelector('.falling-letter');
+    
+    if (!letter) return;
+
+    // 停止所有当前动画
+    gsap.killTweensOf(letter);
+
+    // 简单的点击反馈动画
+    gsap.to(letter, {
+      scale: 1.1,
+      duration: 0.1,
+      ease: 'power1.out',
+      yoyo: true,
+      repeat: 1,
+      onComplete: () => {
+        // 直接触发跳转
+        onLetterClick?.();
+        onAnimationComplete?.();
+      }
+    });
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -106,8 +137,9 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick }) => {
     >
       <div className="falling-letter absolute pointer-events-auto">
         <Letter 
-          onClick={onLetterClick}
+          onClick={handleLetterClick}
           className="transform-gpu hover:scale-110 transition-transform duration-300"
+          showPaper={false}
         />
       </div>
     </div>

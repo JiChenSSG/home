@@ -32,7 +32,19 @@ body {
 	transform: scale(1.05);
 }
 
-/* 平滑的渐变背景动画 */
+/* 页面过渡动画 */
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.animate-fade-in {
+	animation: fade-in 0.6s ease-out forwards;
+} /* 平滑的渐变背景动画 */
 @keyframes gradientShift {
 	0% {
 		background-position: 0% 50%;
