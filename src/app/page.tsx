@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import FallingLetters from "../components/FallingLetters";
+import { FallingLetters } from '@/components';
 
 export default function Home() {
   const router = useRouter();

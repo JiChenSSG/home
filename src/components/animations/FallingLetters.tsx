@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import Letter from './Letter';
+import Letter from '../ui/Letter';
 
 interface FallingLettersProps {
   onLetterClick?: (clickX: number, clickY: number) => void;
