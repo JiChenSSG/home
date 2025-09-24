@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useRouter, useSearchParams } from 'next/navigation';
+import LetterTemplate from '../../components/templates/LetterTemplate';
+import '../../styles/letter.css';
 
 export default function LetterPage() {
   const router = useRouter();
@@ -16,12 +18,22 @@ export default function LetterPage() {
   const clickX = parseFloat(searchParams.get('clickX') || '0');
   const clickY = parseFloat(searchParams.get('clickY') || '0');
   
-  // 计算屏幕中心位置作为默认值和目标位置
-  const screenCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
-  const screenCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
+  // 安全地获取屏幕中心位置
+  const getScreenCenter = () => {
+    if (typeof window !== 'undefined') {
+      return {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+      };
+    }
+    return { x: 0, y: 0 };
+  };
 
   useEffect(() => {
     if (!contentRef.current || !letterRef.current || !envelopeRef.current || !paperRef.current) return;
+
+    // 安全地获取屏幕中心位置
+    const screenCenter = getScreenCenter();
 
     // 创建完整的信件打开动画序列
     const tl = gsap.timeline();
@@ -34,8 +46,8 @@ export default function LetterPage() {
     // 如果有传入位置参数，从该位置开始；否则从屏幕中心开始
     gsap.set(letterRef.current, {
       scale: 1,
-      x: clickX || screenCenterX,
-      y: clickY || screenCenterY, 
+      x: clickX || screenCenter.x,
+      y: clickY || screenCenter.y, 
       xPercent: -50,
       yPercent: -50,
     });
@@ -55,8 +67,8 @@ export default function LetterPage() {
     tl
       // 1. 从传入位置移动到屏幕中心并放大
       .to(letterRef.current, {
-        x: screenCenterX,
-        y: screenCenterY,
+        x: screenCenter.x,
+        y: screenCenter.y,
         scale: 1.5,
         duration: 0.6,
         ease: 'power2.out'
@@ -112,7 +124,7 @@ export default function LetterPage() {
         ease: 'power2.out'
       }, '-=0.3');
 
-  }, [clickX, clickY, screenCenterX, screenCenterY]);
+  }, [clickX, clickY]);
 
   const handleBackClick = () => {
     if (!contentRef.current) return;
@@ -130,7 +142,7 @@ export default function LetterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-100 relative">
+    <div className="relative">
       {/* 信件动画层 */}
       <div 
         ref={letterRef}
@@ -232,120 +244,44 @@ export default function LetterPage() {
         </div>
       </div>
 
-      {/* 页面内容 */}
-      <div 
-        ref={contentRef}
-        className="container mx-auto px-6 py-12 max-w-4xl"
-      >
-        {/* 返回按钮 */}
-        <button
-          onClick={handleBackClick}
-          className="mb-8 inline-flex items-center space-x-2 text-pink-600 hover:text-pink-800 transition-colors duration-200 group"
+      {/* 信件内容使用简化模板 */}
+      <div ref={contentRef}>
+        <LetterTemplate
+          title="祝我宝宝生日快乐"
+          date="2025年9月19日"
+          sender="朱亦宇"
+          onBackClick={handleBackClick}
         >
-          <svg 
-            className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-200" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M10 19l-7-7m0 0l7-7m-7 7h18" 
-            />
-          </svg>
-          <span className="font-medium">返回主页</span>
-        </button>
+          {/* 信件正文内容 */}
+          <p className="letter-header">
+            你好苏天译，
+          </p>
+          
+          <p className="letter-text">
+            感谢你打开这封特别的信件。这里是一个充满创意和想象的空间，
+            每一个像素都承载着对美好的向往。在这个数字世界里，我们用心雕琢每一个细节。
+          </p>
 
-        {/* 信件内容 */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-12">
-          {/* 信件头部 */}
-          <div className="border-b border-pink-200 pb-6 mb-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                    来自远方的问候
-                  </h1>
-                  <p className="text-pink-600 font-medium">2025年9月19日</p>
-                </div>
-              </div>
-              <div className="hidden md:block">
-                <div className="w-16 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded border border-pink-600 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+          <p className="letter-text">
+            在这个数字化的时代，我们用代码编织梦想，用设计传递情感。
+            这封粉色的信件不仅仅是一个简单的动画，更是一份对细节的执着，
+            对用户体验的用心雕琢。每一个交互都蕴含着创作者的温度。
+          </p>
+
+          <div className="letter-quote">
+            <p>
+              &ldquo;设计不只是外观和感觉，设计是如何工作的。每一次点击，每一个过渡，
+              都应该让人感受到关怀和温暖。&rdquo;
+            </p>
+            <footer>— 致每一位追求美好体验的创作者</footer>
           </div>
 
-          {/* 信件正文 */}
-          <div className="prose prose-lg prose-pink max-w-none">
-            <p className="text-xl leading-relaxed text-gray-700 mb-6 font-medium">
-              亲爱的朋友，
-            </p>
-            
-            <p className="text-gray-600 leading-relaxed mb-6">
-              感谢你打开这封特别的信件。这里是一个充满创意和想象的空间，
-              每一个像素都承载着对美好的向往。在这个数字世界里，我们用心雕琢每一个细节。
-            </p>
-
-            <p className="text-gray-600 leading-relaxed mb-6">
-              在这个数字化的时代，我们用代码编织梦想，用设计传递情感。
-              这封粉色的信件不仅仅是一个简单的动画，更是一份对细节的执着，
-              对用户体验的用心雕琢。每一个交互都蕴含着创作者的温度。
-            </p>
-
-            <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-300">
-              <p className="text-pink-800 italic text-lg leading-relaxed">
-                "设计不只是外观和感觉，设计是如何工作的。每一次点击，每一个过渡，
-                都应该让人感受到关怀和温暖。"
-              </p>
-              <footer className="text-pink-600 text-sm mt-3 font-medium">— 致每一位追求美好体验的创作者</footer>
-            </div>
-
-            <p className="text-gray-600 leading-relaxed mb-6">
-              希望这个小小的交互能给你带来一丝惊喜和温暖。
-              愿你的每一天都像这封信一样，充满色彩和美好。
-              在快节奏的生活中，不要忘记停下来欣赏那些精心设计的小美好。
-            </p>
-
-            <div className="text-right mt-8">
-              <p className="text-gray-500 mb-2 italic">此致</p>
-              <p className="text-pink-600 font-semibold text-xl">敬礼</p>
-              <p className="text-gray-400 text-sm mt-2">来自代码世界的温暖问候</p>
-            </div>
-          </div>
-
-          {/* 装饰元素 */}
-          <div className="mt-12 pt-8 border-t border-pink-200">
-            <div className="flex items-center justify-center space-x-6">
-              <div className="w-3 h-3 bg-pink-300 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-rose-300 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-              <div className="w-4 h-4 bg-pink-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-              <div className="w-2 h-2 bg-rose-300 rounded-full animate-pulse" style={{animationDelay: '1.5s'}}></div>
-              <div className="w-3 h-3 bg-pink-300 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
-            </div>
-          </div>
-        </div>
-
-        {/* 底部操作按钮 */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="px-8 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-medium hover:from-pink-600 hover:to-rose-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
-            分享这封信
-          </button>
-          <button className="px-8 py-3 bg-white text-pink-600 border-2 border-pink-300 rounded-full font-medium hover:bg-pink-50 transform hover:scale-105 transition-all duration-200">
-            收藏到心愿单
-          </button>
-        </div>
+          <p className="letter-text">
+            希望这个小小的交互能给你带来一丝惊喜和温暖。
+            愿你的每一天都像这封信一样，充满色彩和美好。
+            在快节奏的生活中，不要忘记停下来欣赏那些精心设计的小美好。
+          </p>
+        </LetterTemplate>
       </div>
     </div>
   );

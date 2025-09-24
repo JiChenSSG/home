@@ -2,3 +2,4 @@
 export * from './icons';
 export * from './ui';
 export * from './animations';
+export * from './templates';

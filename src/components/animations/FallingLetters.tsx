@@ -12,10 +12,41 @@ interface FallingLettersProps {
 const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimationComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpening, setIsOpening] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // 安全地获取窗口尺寸
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (typeof window !== 'undefined') {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      }
+    };
+
+    // 初始设置
+    updateDimensions();
+
+    // 监听窗口大小变化
+    const handleResize = () => {
+      updateDimensions();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   // 设置信件初始位置在屏幕中央上方
-	const centerX = (window.innerWidth - 80) / 2; // 80是信件宽度
-  const finalY = window.innerHeight - 120; // 距离底部120px
+  const centerX = (dimensions.width - 80) / 2; // 80是信件宽度
+  const finalY = dimensions.height - 120; // 距离底部120px
 
   const handleLetterClick = () => {
     if (isOpening) return; // 防止重复点击
@@ -53,7 +84,7 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimat
   };
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || dimensions.width === 0 || dimensions.height === 0) return;
 
     const letter = containerRef.current.querySelector('.falling-letter');
     
@@ -116,24 +147,10 @@ const FallingLetters: React.FC<FallingLettersProps> = ({ onLetterClick, onAnimat
       repeat: -1,
     }, '-=2');
 
-    // 窗口大小调整时重新定位
-    const handleResize = () => {
-      const newCenterX = (window.innerWidth - 80) / 2;
-      const newFinalY = window.innerHeight - 120;
-      
-      gsap.set(letter, {
-        x: newCenterX,
-        y: newFinalY,
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
       gsap.killTweensOf(letter);
     };
-  }, []);
+  }, [centerX, finalY, dimensions.width, dimensions.height]);
 
   return (
     <div 
