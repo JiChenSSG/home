@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useRouter, useSearchParams } from 'next/navigation';
-import LetterTemplate from '../../components/templates/LetterTemplate';
+import { LetterTemplate, PaperSvg, EnvelopeSvg, LetterPagination } from '@/components';
 import '../../styles/letter.css';
 
 export default function LetterPage() {
@@ -150,137 +150,86 @@ export default function LetterPage() {
       >
         {/* 信封 */}
         <div ref={envelopeRef} className="absolute">
-          <svg
-            width="120"
-            height="96"
-            viewBox="0 0 80 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="drop-shadow-2xl"
-          >
-            <rect
-              x="4"
-              y="12"
-              width="72"
-              height="48"
-              rx="3"
-              fill="url(#pinkGradient)"
-              stroke="#ec4899"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M4 14 L40 36 L76 14"
-              stroke="#ec4899"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <path
-              d="M4 12 L40 34 L76 12 L76 14 L40 36 L4 14 Z"
-              fill="url(#pinkGradientDark)"
-              stroke="#ec4899"
-              strokeWidth="1.5"
-            />
-            <rect
-              x="52"
-              y="16"
-              width="18"
-              height="12"
-              rx="1.5"
-              fill="url(#stampGradient)"
-              stroke="#be185d"
-              strokeWidth="0.8"
-            />
-            <circle cx="61" cy="22" r="2.5" fill="#ffffff" opacity="0.9" />
-            <path
-              d="M57 20.5 C57 19.5 57.8 18.8 58.5 18.8 C59.2 18.8 60 19.5 60 20.5 C60 19.5 60.8 18.8 61.5 18.8 C62.2 18.8 63 19.5 63 20.5 C63 21.5 60 24 60 24 S57 21.5 57 20.5"
-              fill="#ffffff"
-              opacity="0.7"
-            />
-            <defs>
-              <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#fdf2f8" />
-                <stop offset="50%" stopColor="#fce7f3" />
-                <stop offset="100%" stopColor="#fbcfe8" />
-              </linearGradient>
-              <linearGradient id="pinkGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f9a8d4" />
-                <stop offset="100%" stopColor="#ec4899" />
-              </linearGradient>
-              <linearGradient id="stampGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ec4899" />
-                <stop offset="100%" stopColor="#be185d" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
+					<EnvelopeSvg 
+						width={140} 
+						height={100} 
+						className="drop-shadow-2xl" 
+					/>
+				</div>
 
         {/* 信纸 */}
         <div ref={paperRef} className="absolute">
-          <svg
-            width="120"
-            height="96"
-            viewBox="0 0 80 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="drop-shadow-xl"
-          >
-            <rect
-              x="8"
-              y="4"
-              width="64"
-              height="56"
-              rx="2"
-              fill="#ffffff"
-              stroke="#f3f4f6"
-              strokeWidth="1"
-            />
-            <line x1="14" y1="12" x2="66" y2="12" stroke="#e5e7eb" strokeWidth="1" />
-            <line x1="14" y1="18" x2="62" y2="18" stroke="#e5e7eb" strokeWidth="1" />
-            <line x1="14" y1="24" x2="64" y2="24" stroke="#e5e7eb" strokeWidth="1" />
-            <line x1="14" y1="30" x2="58" y2="30" stroke="#e5e7eb" strokeWidth="1" />
-            <line x1="14" y1="36" x2="60" y2="36" stroke="#e5e7eb" strokeWidth="1" />
-            <line x1="14" y1="42" x2="56" y2="42" stroke="#e5e7eb" strokeWidth="1" />
-          </svg>
-        </div>
-      </div>
+					<PaperSvg 
+						width={140} 
+						height={180} 
+						className="drop-shadow-2xl" 
+					/>
+				</div>
+				
+			</div>
 
-      {/* 信件内容使用简化模板 */}
       <div ref={contentRef}>
         <LetterTemplate
           title="祝我宝宝生日快乐"
           date="2025年9月19日"
           sender="朱亦宇"
           onBackClick={handleBackClick}
+					end='(ꈍᴗꈍ)ε｀*)~'
         >
-          {/* 信件正文内容 */}
-          <p className="letter-header">
-            你好苏天译，
-          </p>
-          
-          <p className="letter-text">
-            感谢你打开这封特别的信件。这里是一个充满创意和想象的空间，
-            每一个像素都承载着对美好的向往。在这个数字世界里，我们用心雕琢每一个细节。
-          </p>
+          {/* 使用分页组件 */}
+          <LetterPagination
+            pages={[
+              // 第一页
+              <>
+                <p className="letter-header">
+                  早上好苏天译，
+                </p>
+                
+                <p className="letter-text">
+                  想了很久这里写什么，如果光是一些生日祝福的话感觉写不了多少，白费我写了这么多代码，那就把我想对你说的话都写在这里吧。
+                </p>
 
-          <p className="letter-text">
-            在这个数字化的时代，我们用代码编织梦想，用设计传递情感。
-            这封粉色的信件不仅仅是一个简单的动画，更是一份对细节的执着，
-            对用户体验的用心雕琢。每一个交互都蕴含着创作者的温度。
-          </p>
+                <p className="letter-text">
+                  首先，祝你生日快乐！希望你在新的一岁里，能够开开心心，健健康康，万事顺意。
+                </p>
+              </>,
+              
+              // 第二页
+              <>
+                <p className="letter-text">
+                  认识你这么久，看着你一点一点成长，真的很高兴。你总是那么努力，那么坚强，遇到困难也从不轻易放弃。
+                </p>
 
-          <div className="letter-quote">
-            <p>
-              &ldquo;设计不只是外观和感觉，设计是如何工作的。每一次点击，每一个过渡，
-              都应该让人感受到关怀和温暖。&rdquo;
-            </p>
-            <footer>— 致每一位追求美好体验的创作者</footer>
-          </div>
+                <div className="letter-quote">
+                  <p>
+                    &ldquo;愿你三冬暖，愿你春不寒。愿你天黑有灯，下雨有伞。愿你路上有良人相伴。&rdquo;
+                  </p>
+                  <footer>—— 送给最特别的你</footer>
+                </div>
 
-          <p className="letter-text">
-            希望这个小小的交互能给你带来一丝惊喜和温暖。
-            愿你的每一天都像这封信一样，充满色彩和美好。
-            在快节奏的生活中，不要忘记停下来欣赏那些精心设计的小美好。
-          </p>
+                <p className="letter-text">
+                  希望你能一直保持这份初心，继续勇敢地追求自己的梦想。
+                </p>
+              </>,
+              
+              // 第三页
+              <>
+                <p className="letter-text">
+                  未来的日子里，不管遇到什么，记得还有我一直在你身边支持你。虽然我可能做得不够好，但我会一直努力。
+                </p>
+
+                <p className="letter-text">
+                  最后，再次祝你生日快乐！愿所有美好都如期而至，愿你被这个世界温柔以待。
+                </p>
+
+                <div className="letter-quote-highlight">
+                  <p>
+                    愿你永远年轻，永远热泪盈眶，永远相信美好。
+                  </p>
+                </div>
+              </>
+            ]}
+          />
         </LetterTemplate>
       </div>
     </div>

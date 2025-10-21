@@ -11,7 +11,8 @@ interface LetterTemplateProps {
   showBackButton?: boolean;
   backButtonText?: string;
   onBackClick?: () => void;
-  className?: string;
+	className?: string;
+	end?: string;
 }
 
 const LetterTemplate: React.FC<LetterTemplateProps> = ({
@@ -22,7 +23,8 @@ const LetterTemplate: React.FC<LetterTemplateProps> = ({
   showBackButton = true,
   backButtonText = "返回主页",
   onBackClick,
-  className = ""
+	className = "",
+	end=""
 }) => {
   const router = useRouter();
 
@@ -96,8 +98,8 @@ const LetterTemplate: React.FC<LetterTemplateProps> = ({
 
 						{/* 署名 */}
             <div className="text-right mt-8">
-              <p className="text-gray-500 mb-2 italic">爱你的{sender}</p>
-              <p className="text-pink-600 font-semibold text-xl">mua~</p>
+              <p className="text-gray-500 mb-2 italic">{sender}</p>
+							<p className="text-pink-600 font-semibold text-xl">{end}</p>
             </div>
           </div>
 
