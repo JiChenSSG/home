@@ -327,9 +327,19 @@ export default function LetterPage() {
 							</>,
 							<>
 								<div className="letter-text">
-									
+									<p>愿你的每一天都充满阳光与笑容，愿你的梦想都能一一实现。</p>
+
+									<p>愿你永远保持对生活的热情，永远保持那份独特的性格。</p>
+
+									<p>愿我们的每一天都能一起经历，一起成长，一起变老</p>
+
+									<p>
+										生日快乐，我的宝宝！
+										<br />
+										爱你的每一天，从今天到永远。
+									</p>
 								</div>
-							</>
+							</>,
 						]}
 					/>
 				</LetterTemplate>
