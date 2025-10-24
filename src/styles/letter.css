@@ -7,7 +7,7 @@
 }
 
 /* 普通文本样式 */
-.letter-text {
+.letter-text p {
   @apply text-gray-600 leading-relaxed mb-6;
 }
 
