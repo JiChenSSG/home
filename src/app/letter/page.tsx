@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/components";
 import "../../styles/letter.css";
 
-export default function LetterPage() {
+function LetterContent() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -345,5 +345,19 @@ export default function LetterPage() {
 				</LetterTemplate>
 			</div>
 		</div>
+	);
+}
+
+export default function LetterPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex items-center justify-center min-h-screen">
+					加载中...
+				</div>
+			}
+		>
+			<LetterContent />
+		</Suspense>
 	);
 }
