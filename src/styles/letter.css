@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Letter Page Styles */
+
+.letter-header {
+	@apply text-xl leading-relaxed text-gray-700 mb-6 font-medium;
+}
+
+/* 普通文本样式 */
+.letter-text p {
+  @apply text-gray-600 leading-relaxed mb-6;
+}
+
+/* 引用块样式 */
+.letter-quote {
+  @apply bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-300;
+}
+
+/* 引用文本样式 */
+.letter-quote p {
+  @apply text-pink-800 italic text-lg leading-relaxed m-0;
+}
+
+/* 引用署名样式 */
+.letter-quote footer {
+  @apply text-pink-600 text-sm mt-3 font-medium;
+}
+
+/* 可选：更多文本样式变体 */
+.letter-text-large {
+  @apply text-xl leading-relaxed text-gray-700 mb-6 font-medium;
+}
+
+.letter-text-small {
+  @apply text-sm text-gray-500 leading-relaxed mb-4;
+}
+
+/* 高亮引用样式 - 更突出的版本 */
+.letter-quote-highlight {
+  @apply bg-gradient-to-r from-pink-100 to-rose-100 rounded-xl p-8 mb-8 border-l-4 border-pink-400 shadow-lg;
+}
+
+.letter-quote-highlight p {
+  @apply text-pink-900 italic text-xl leading-relaxed font-medium m-0;
+}
+
+/* 简洁引用样式 - 更简单的版本 */
+.letter-quote-simple {
+  @apply bg-pink-50 rounded-lg p-4 mb-6 border-l-4 border-pink-300;
+}
+
+.letter-quote-simple p {
+  @apply text-pink-700 italic leading-relaxed m-0;
+}
